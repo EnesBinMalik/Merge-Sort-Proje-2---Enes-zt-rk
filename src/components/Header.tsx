@@ -1,21 +1,24 @@
 import React, { useState } from 'react';
 import { Copy, Check, FileText, Printer } from 'lucide-react';
 import { MARKDOWN_HOMEWORK_TEMPLATE } from '../utils/mergeSortSimulator';
+import { MARKDOWN_PROJE3_TEMPLATE } from '../utils/bstSimulator';
 
 interface HeaderProps {
-  onCopySuccess?: () => void;
+  activeProject: 'proje2' | 'proje3';
+  onSelectProject: (p: 'proje2' | 'proje3') => void;
 }
 
-export const Header: React.FC<HeaderProps> = () => {
+export const Header: React.FC<HeaderProps> = ({ activeProject, onSelectProject }) => {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
+    const textToCopy =
+      activeProject === 'proje2' ? MARKDOWN_HOMEWORK_TEMPLATE : MARKDOWN_PROJE3_TEMPLATE;
     try {
-      await navigator.clipboard.writeText(MARKDOWN_HOMEWORK_TEMPLATE);
+      await navigator.clipboard.writeText(textToCopy);
       setCopied(true);
       setTimeout(() => setCopied(false), 2500);
     } catch {
-      // Fallback
       setCopied(true);
       setTimeout(() => setCopied(false), 2500);
     }
@@ -26,34 +29,41 @@ export const Header: React.FC<HeaderProps> = () => {
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-8">
+    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4 sm:gap-8">
         {/* Zone 1: Single text element wordmark */}
-        <a href="#simulator" className="text-base sm:text-lg font-bold tracking-tight text-slate-900 whitespace-nowrap shrink-0 flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-indigo-600 inline-block"></span>
-          Merge Sort Proje 2
-        </a>
+        <div className="flex items-center gap-3 shrink-0">
+          <a href="#" className="text-sm sm:text-base font-bold tracking-tight text-slate-900 whitespace-nowrap flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-indigo-600 inline-block"></span>
+            Veri Yapıları & Algoritmalar
+          </a>
+        </div>
 
-        {/* Zone 2: 4-5 concise single-line text navigation links */}
-        <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
-          <a href="#simulator" className="hover:text-indigo-600 transition-colors whitespace-nowrap shrink-0">
-            Simülatör
-          </a>
-          <a href="#cozum-raporu" className="hover:text-indigo-600 transition-colors whitespace-nowrap shrink-0">
-            Aşama Çözümü
-          </a>
-          <a href="#big-o-analizi" className="hover:text-indigo-600 transition-colors whitespace-nowrap shrink-0">
-            Big-O Analizi
-          </a>
-          <a href="#kod-ornekleri" className="hover:text-indigo-600 transition-colors whitespace-nowrap shrink-0">
-            Kod Örnekleri
-          </a>
-          <a href="#bilgi-testi" className="hover:text-indigo-600 transition-colors whitespace-nowrap shrink-0">
-            Bilgi Testi
-          </a>
-        </nav>
+        {/* Zone 2: Project Switcher Tabs (Functional interactive buttons) */}
+        <div className="flex items-center bg-slate-100 p-1 rounded-lg">
+          <button
+            onClick={() => onSelectProject('proje2')}
+            className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all whitespace-nowrap ${
+              activeProject === 'proje2'
+                ? 'bg-white text-indigo-700 shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            Proje 2: Merge Sort
+          </button>
+          <button
+            onClick={() => onSelectProject('proje3')}
+            className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all whitespace-nowrap ${
+              activeProject === 'proje3'
+                ? 'bg-white text-indigo-700 shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            Proje 3: Binary Search Tree
+          </button>
+        </div>
 
-        {/* Zone 3: 1 primary action button + print icon button */}
+        {/* Zone 3: 1 primary action button + print icon */}
         <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={handlePrint}
@@ -66,17 +76,20 @@ export const Header: React.FC<HeaderProps> = () => {
 
           <button
             onClick={handleCopy}
-            className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-semibold text-white bg-slate-900 rounded-lg hover:bg-indigo-600 transition-colors whitespace-nowrap shadow-sm"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-white bg-slate-900 rounded-lg hover:bg-indigo-600 transition-colors whitespace-nowrap shadow-xs"
           >
             {copied ? (
               <>
                 <Check className="w-3.5 h-3.5 text-emerald-300" />
-                <span>Ödev Kopyalandı!</span>
+                <span>Kopyalandı!</span>
               </>
             ) : (
               <>
                 <Copy className="w-3.5 h-3.5" />
-                <span>Ödevi Kopyala (Markdown)</span>
+                <span className="hidden sm:inline">
+                  {activeProject === 'proje2' ? 'Proje 2 Kopyala' : 'Proje 3 Kopyala'}
+                </span>
+                <span className="sm:hidden">Kopyala</span>
               </>
             )}
           </button>
