@@ -1,0 +1,6 @@
+{
+  "name": "Merge Sort Proje 2 - Enes Öztürk",
+  "description": "[16,21,11,8,12,22] Birleştirme Sıralaması (Merge Sort) aşamaları, Big-O gösterimi ve interaktif görselleştirici. Hazırlayan: Enes Öztürk.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
